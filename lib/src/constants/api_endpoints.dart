@@ -11,3 +11,16 @@ const baseUrl = 'https://api-football-v1.p.rapidapi.com/v3';
 // ENDPOINTS
 
 const  getLeaguesEndpoint = '/leagues';
+const  fixtureEndpoint = '/fixtures';
+const  standingsEndpoint = '/standings';
+const  countriesEndpoint = '/countries';
+const  teamsEndpoint = '/teams';
+const  playersSquad = '/players/squads';
+const  playerStatistics = '/players';
+const  coatch = '/coachs';
+const  topScorrers = '/players/topscorers';
+const  fixtureStatistics = '/fixtures/statistics';
+const  fixtureLineups = '/fixtures/lineups';
+const  fixtureEvents = '/fixtures/events';
+
+

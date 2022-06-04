@@ -25,9 +25,7 @@ class MatchesDetailPageTile extends StatelessWidget {
         childrenPadding: EdgeInsets.zero,
         title:  Text(
               date,
-              style: kLeagueNameTextStyle.copyWith(
-                color: kgreyColor
-              ),
+              style: Theme.of(context).textTheme.bodyText1,
             ),
         children: children,
       ),
@@ -99,13 +97,6 @@ class DetailMatchItems extends StatelessWidget {
               const SizedBox(
                 height: 5.0,
               ),
-              // Row(
-              //   children: const [
-              //     Text('ESPN+, ', style: kTeamMatchSponsorName),
-              //     Text('ESPN App',
-              //         style: kTeamMatchSponsorName),
-              //   ],
-              // )
             ],
           ),
           const Icon(

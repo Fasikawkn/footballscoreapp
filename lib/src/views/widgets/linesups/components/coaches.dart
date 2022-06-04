@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:footballscoreapp/src/constants/material_colors.dart';
+import 'package:footballscoreapp/src/models/fixture_lineups.dart';
+import 'package:footballscoreapp/src/views/views.dart';
 
 class LineUpCoaches extends StatelessWidget {
-  const LineUpCoaches({Key? key}) : super(key: key);
+  const LineUpCoaches(
+      {required this.awayCoach, required this.homeCoach, Key? key})
+      : super(key: key);
+  final Coach homeCoach;
+  final Coach awayCoach;
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +38,8 @@ class LineUpCoaches extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _buildCoach('S. Cherundalo'),
-                _buildCoach('A. Health')
+                _buildCoach(homeCoach),
+                _buildCoach(awayCoach)
               ],
             ),
           ),
@@ -42,27 +48,18 @@ class LineUpCoaches extends StatelessWidget {
     );
   }
 
-  Widget _buildCoach(String name) {
+  Widget _buildCoach(Coach coach) {
     return SizedBox(
       height: 150,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            decoration: const BoxDecoration(
-                shape: BoxShape.circle, color: Colors.white),
-            child: const Align(
-                alignment: Alignment.center,
-                child: Icon(
-                  Icons.person,
-                  size: 30.0,
-                )),
-          ),
+          ContactNetworkImage(url: coach.photo.toString(), width: 30),
           const SizedBox(
             height: 5.0,
           ),
           Text(
-            name,
+            coach.name.toString(),
             style:
                 const TextStyle(color: kgreyColor, fontWeight: FontWeight.w600),
           )

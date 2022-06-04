@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:footballscoreapp/src/blocs/blocs.dart';
 import 'package:footballscoreapp/src/constants/constants.dart';
+import 'package:footballscoreapp/src/models/route_league_model.dart';
+import 'package:footballscoreapp/src/services/services.dart';
+import 'package:footballscoreapp/src/views/widgets/custom_shimmer/legues_shimmer.dart';
 import 'package:footballscoreapp/src/views/widgets/widgets.dart';
+import 'package:http/http.dart' as http;
 
 class DetailViewPage extends StatefulWidget {
   static const routeName = 'footballscoreapp/detailviewpage';
-  const DetailViewPage({required this.tabLength, Key? key}) : super(key: key);
-  final int tabLength;
+  const DetailViewPage({required this.league, Key? key}) : super(key: key);
+  final RouteLeagueModel league;
 
   @override
   State<DetailViewPage> createState() => _DetailViewPageState();
@@ -13,11 +19,11 @@ class DetailViewPage extends StatefulWidget {
 
 class _DetailViewPageState extends State<DetailViewPage> {
   ScrollController _scrollController = ScrollController();
-  int _tabLength = 1;
+  int _tabLength = 2;
   @override
   void initState() {
     setState(() {
-      _tabLength = widget.tabLength;
+      // _tabLength = ;
     });
     super.initState();
   }
@@ -26,11 +32,13 @@ class _DetailViewPageState extends State<DetailViewPage> {
 
   @override
   Widget build(BuildContext context) {
+    final GameMatchesRepository _gameMatchesRepository = GameMatchesRepository(
+        matchesDataProvider: MatchesDataProvider(httpClient: http.Client()));
     return DefaultTabController(
       length: _tabLength,
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: Colors.black,
+          backgroundColor:Theme.of(context).scaffoldBackgroundColor,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.miniStartTop,
           floatingActionButton: FloatingActionButton(
@@ -61,7 +69,6 @@ class _DetailViewPageState extends State<DetailViewPage> {
 
                   flexibleSpace: LayoutBuilder(builder: (context, constraints) {
                     top = constraints.biggest.height;
-                    print('THe height is $top');
                     return Container(
                       margin: EdgeInsets.only(bottom: 25.0),
                       width: top == 80.0 ? 100 : double.infinity,
@@ -83,30 +90,32 @@ class _DetailViewPageState extends State<DetailViewPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      if (top > 160)
-                                        Image.asset(
-                                          'assets/images/ball_one.png',
-                                          width: 30.0,
-                                        ),
-                                      if (top > 160)
-                                        const SizedBox(
-                                          height: 10.0,
-                                        ),
-                                      const Text(
-                                        'Major League Soccer',
-                                        style: TextStyle(
-                                            color: kWhiteColor,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 15.0),
-                                      ),
-                                      if (top > 160)
-                                        const Text(
-                                          'United States',
-                                          style: TextStyle(
-                                              color: kgreyColor,
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 13.0),
-                                        ),
+                                      // if (top > 160)
+                                      //   CustomCachedNetworkImage(
+                                      //     url: widget.league.league!.logo!,
+                                      //     placeholder:
+                                      //         'assets/images/ball_one.png',
+                                      //     width: 30.0,
+                                      //   ),
+                                      // if (top > 160)
+                                      //   const SizedBox(
+                                      //     height: 10.0,
+                                      //   ),
+                                      // Text(
+                                      //   widget.league.league!.name!,
+                                      //   style: const TextStyle(
+                                      //       color: kWhiteColor,
+                                      //       fontWeight: FontWeight.w400,
+                                      //       fontSize: 15.0),
+                                      // ),
+                                      // if (top > 160)
+                                      //   Text(
+                                      //     widget.league.country!.name!,
+                                      //     style: const TextStyle(
+                                      //         color: kgreyColor,
+                                      //         fontWeight: FontWeight.w400,
+                                      //         fontSize: 13.0),
+                                      //   ),
                                     ],
                                   ),
                                 ),
@@ -129,31 +138,56 @@ class _DetailViewPageState extends State<DetailViewPage> {
                 ),
               ];
             }),
-            body: Container(
-              
-              child: TabBarView(
-                children:  [
-                 const MatchesDetailPageTile(
-                    date: '2/16/2022',
-                    children: [
-                      DetailMatchItems(
-                        teamOne: 'Wolfs burg',
-                        teamTwo: 'Mainz 05',
+            body: TabBarView(
+              children: [
+                BlocProvider(
+                  lazy: false,
+                  create: ((context) => GamematchBloc(
+                            gameMatchesRepository: _gameMatchesRepository,
+                          )..add(
+                              GetGamematchsByLeagueIdEvent(
+                                date: '2022-05-17',
+                                season: widget.league.season!,
+                                    
+                                leagueId: '',
+                              ),
+                            ) // widget.league.league!.id.toString()));
                       ),
-                      DetailMatchItems(
-                        teamOne: 'Wolfs burg',
-                        teamTwo: 'Mainz 05',
-                      )
-                    ],
+                  child: BlocBuilder<GamematchBloc, GamematchState>(
+                    builder: (context, state) {
+                      if (state is GamematchLoadingState ||
+                          state is GamematchInitialState) {
+                        return const LeaguesShimmer();
+                      }
+                      if (state is GamematchLoadedState) {
+                        
+                        if(state.gameMathes.isNotEmpty){
+                          return  MatchesDetailPageTile(
+                          date: formatDateBySlash(state.gameMathes.first.fixture!.date.toString()),
+                          children: state.gameMathes.map((match) =>  DetailMatchItems(
+                              teamOne: match.teams!.home!.name.toString(),
+                              teamTwo: match.teams!.away!.name.toString(),
+                            )).toList(),
+                        );
+
+                        }else{
+                          return const  Text('No matches');
+                        }
+                        
+                      } else {
+                        GamematchErrorState _errorState = state as GamematchErrorState;
+                        return Container();
+                      }
+                    },
                   ),
-                 SingleChildScrollView(child: Container(
-                   margin: const EdgeInsets.only(top: 4.0),
-                   child: const StandingTable())),
-                  Container(
-                    
-                  )
-                ],
-              ),
+                ),
+                SingleChildScrollView(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 4.0),
+                  
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -162,20 +196,14 @@ class _DetailViewPageState extends State<DetailViewPage> {
   }
 
   List<Widget> _buildBottomNavBar() {
-    return const[
+    return const [
       Tab(
         text: 'Matches',
-        
       ),
-       Tab(
+      Tab(
         text: 'Standing',
-        
       ),
-       Tab(
-        text: 'Top Scorers',
-        
-      ),
-
+     
     ];
   }
 }

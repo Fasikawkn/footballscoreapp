@@ -7,6 +7,7 @@ class OddButton extends StatelessWidget {
     required this.color,
   }) : super(key: key);
   final Color color;
+  
   final String text;
 
   @override

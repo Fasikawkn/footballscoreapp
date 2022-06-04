@@ -20,7 +20,7 @@ class CustomHorizontalDatePicker extends StatefulWidget {
 
 class _CustomHorizontalDatePickerState
     extends State<CustomHorizontalDatePicker> {
-  DateTime selectedDate = DateTime.now(); // TO tracking date
+  DateTime selectedDate = DateTime.now().subtract(const Duration(days: 20)); // TO tracking date
 
   late AutoScrollController controller;
 
@@ -43,6 +43,10 @@ class _CustomHorizontalDatePickerState
 
   List<String> listOfDays = ["M", "T", "W", "T", "F", "S", "S"];
 
+  _calculateIndex(){
+
+  }
+
   @override
   void initState() {
     currentDateSelectedIndex = widget.currentSelectedIndex;
@@ -50,25 +54,23 @@ class _CustomHorizontalDatePickerState
       viewportBoundaryGetter: () =>
           Rect.fromLTRB(0, 0, MediaQuery.of(context).padding.right, 0),
       axis: Axis.horizontal,
+      initialScrollOffset: 10,
+      keepScrollOffset: true
     );
     super.initState();
   }
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     currentDateSelectedIndex = widget.currentSelectedIndex;
     super.didChangeDependencies();
   }
 
   @override
   void didUpdateWidget(covariant CustomHorizontalDatePicker oldWidget) {
-    print('current idex ${widget.currentSelectedIndex}');
   
     if (widget.currentSelectedIndex == 0) {
-      print('zero');
       setState(() {
       currentDateSelectedIndex == widget.currentSelectedIndex;
-      print('the selected >>>>> $currentDateSelectedIndex');
     });
       
     } else if (widget.currentSelectedIndex == 1 &&
@@ -84,15 +86,20 @@ class _CustomHorizontalDatePickerState
 
   Future _scrollToIndex(int index) async {
     await controller.scrollToIndex(index,
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 1),
         preferPosition: AutoScrollPosition.begin);
   }
 
+ 
+
   @override
   Widget build(BuildContext context) {
+    debugPrint("Widget selected index ${widget.currentSelectedIndex.toString()}");
+    debugPrint('Widget selected mont ${widget.selectedMonth.toString()}');
+    debugPrint('Selected Date ${selectedDate.toString()}');
     return Column(
       children: [
-        Container(
+        SizedBox(
           height: 80,
           child: Container(
             color: kPrimaryColor2,
@@ -100,10 +107,11 @@ class _CustomHorizontalDatePickerState
               separatorBuilder: (BuildContext context, int index) {
                 return const SizedBox(width: 10);
               },
-              itemCount: 365,
+              itemCount:  365 * 2,
               controller: controller,
               scrollDirection: Axis.horizontal,
               itemBuilder: (BuildContext context, int index) {
+                 DateTime _startDate = DateTime.now().subtract(const Duration(days: 20));
                 return AutoScrollTag(
                   key: ValueKey(index),
                   controller: controller,
@@ -114,7 +122,7 @@ class _CustomHorizontalDatePickerState
                         currentDateSelectedIndex = index;
                         widget.currentSelectedIndex = index;
                         selectedDate =
-                            DateTime.now().add(Duration(days: index));
+                           _startDate.add(Duration(days: index));
                       });
 
                       widget.selectedTime(selectedDate);
@@ -131,7 +139,7 @@ class _CustomHorizontalDatePickerState
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            listOfDays[DateTime.now()
+                            listOfDays[_startDate
                                         .add(Duration(days: index))
                                         .weekday -
                                     1]
@@ -159,7 +167,7 @@ class _CustomHorizontalDatePickerState
                                     : kPrimaryColor2),
                             child: Center(
                               child: Text(
-                                DateTime.now()
+                               _startDate
                                     .add(Duration(days: index))
                                     .day
                                     .toString(),

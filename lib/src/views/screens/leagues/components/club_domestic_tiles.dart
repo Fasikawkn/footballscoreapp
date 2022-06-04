@@ -35,10 +35,10 @@ class _ClubDomesticTileState extends State<ClubDomesticTile> {
         
           textColor: kWhiteColor,
           iconColor: kgreyColor,
-          initiallyExpanded: true,
+          initiallyExpanded: false,
           collapsedIconColor: kgreyColor,
           collapsedBackgroundColor: widget.collapsedBackgroundColor,
-          backgroundColor: kPrimaryColor2,
+          backgroundColor: widget.collapsedBackgroundColor,
           childrenPadding: EdgeInsets.zero,
           title: Row(
             children: [
@@ -48,7 +48,7 @@ class _ClubDomesticTileState extends State<ClubDomesticTile> {
               ),
               Text(
                 widget.leadingName,
-                style: kLeagueNameTextStyle,
+                style: Theme.of(context).textTheme.bodyText1,
               )
             ],
           ),

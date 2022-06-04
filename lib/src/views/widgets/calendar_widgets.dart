@@ -30,16 +30,16 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 50.0,),
 
-      decoration: const BoxDecoration(
-        color: kPrimaryColor2,
-        borderRadius: BorderRadius.only(
+      decoration:  BoxDecoration(
+        color: Theme.of(context).colorScheme.secondary,
+        borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(40.0),
           bottomRight: Radius.circular(40.0),
         ),
       ),
       child: TableCalendar(
-        firstDay: DateTime.utc(2010, 10, 16),
-        lastDay: DateTime.utc(2030, 3, 14),
+        firstDay: DateTime.now().subtract(const Duration(days:100)),
+        lastDay: DateTime.now().add(const Duration(days: 100)),
         focusedDay: _focusedDay,
         selectedDayPredicate: (day) {
           return isSameDay(_selectedDay, day);
@@ -52,24 +52,24 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           widget.onSelect(selectedDay);
           Navigator.of(context).pop();
         },
-        headerStyle: const HeaderStyle(
+        headerStyle:  HeaderStyle(
           leftChevronIcon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.white,
+            color: Theme.of(context).textTheme.bodyText1!.color,
             size: 15.0,
           ),
           rightChevronIcon: Icon(
             Icons.arrow_forward_ios,
-            color: Colors.white,
+            color: Theme.of(context).textTheme.bodyText1!.color,
             size: 15.0,
           ),
           formatButtonVisible: false,
-          formatButtonTextStyle: TextStyle(color: Colors.white),
-          titleTextStyle: TextStyle(color: Colors.white),
+          formatButtonTextStyle: Theme.of(context).textTheme.bodyText1!,
+          titleTextStyle: Theme.of(context).textTheme.bodyText1!,
         ),
-        calendarStyle: const CalendarStyle(
-          defaultTextStyle: TextStyle(color: Colors.white),
-          selectedDecoration: BoxDecoration(
+        calendarStyle:  CalendarStyle(
+          defaultTextStyle: Theme.of(context).textTheme.bodyText1!,
+          selectedDecoration: const BoxDecoration(
             color: Colors.blue,
             shape: BoxShape.circle,
           ),

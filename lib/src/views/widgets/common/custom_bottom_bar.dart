@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:footballscoreapp/src/constants/material_colors.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class CustomBottomBarWidget extends StatelessWidget {
@@ -16,10 +15,10 @@ class CustomBottomBarWidget extends StatelessWidget {
     required this.onItemSelected,
   });
 
-  Widget _buildItem(PersistentBottomNavBarItem item, bool isSelected) {
+  Widget _buildItem(PersistentBottomNavBarItem item, bool isSelected, BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      color: kPrimaryColor,
+      color: Theme.of(context).colorScheme.primary,
       height: 65.0,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -43,14 +42,11 @@ class CustomBottomBarWidget extends StatelessWidget {
               child: FittedBox(
                   child: Text(
                 item.title!,
-                style: TextStyle(
-                    color: isSelected
-                        ? (item.activeColorSecondary == null
-                            ? item.activeColorPrimary
-                            : item.activeColorSecondary)
+                style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                  color: isSelected
+                        ? (item.activeColorSecondary ?? item.activeColorPrimary)
                         : item.inactiveColorPrimary,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 12.0),
+                ),
               )),
             ),
           )
@@ -75,7 +71,7 @@ class CustomBottomBarWidget extends StatelessWidget {
                 onTap: () {
                   onItemSelected(index);
                 },
-                child: _buildItem(item, selectedIndex == index),
+                child: _buildItem(item, selectedIndex == index, context),
               ),
             );
           }).toList(),

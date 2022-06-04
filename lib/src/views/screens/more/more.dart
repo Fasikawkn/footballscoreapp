@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:footballscoreapp/src/constants/material_colors.dart';
+import 'package:footballscoreapp/src/views/screens/more/about_app.dart';
+import 'package:footballscoreapp/src/views/screens/more/theme_settings.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class MorePage extends StatefulWidget {
   static const routeName = 'footballscoreapp/morepage';
@@ -10,13 +13,16 @@ class MorePage extends StatefulWidget {
 }
 
 class _MorePageState extends State<MorePage> {
+  final _keyShare = GlobalKey<State<Tooltip>>();
+  final _keyRate = GlobalKey<State<Tooltip>>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'More',
+          style: Theme.of(context).textTheme.headline1!,
         ),
         centerTitle: true,
       ),
@@ -24,28 +30,72 @@ class _MorePageState extends State<MorePage> {
         margin: const EdgeInsets.only(top: 4.0),
         child: ListView(
           children: [
-            _buildMore('Settings', Colors.blue.shade500, Icons.settings),
+            GestureDetector(
+                onTap: () {
+                  pushNewScreenWithRouteSettings(
+                    context,
+                    screen: const ThemeSettings(),
+                    settings: const RouteSettings(
+                      name: ThemeSettings.routeName,
+                      arguments: 2,
+                    ),
+                  );
+                },
+                child: _buildMore(
+                    'Settings', Colors.blue.shade500, Icons.settings)),
             Container(
               margin: const EdgeInsets.only(top: 4.0),
               child: Column(
                 children: [
-                  _buildMore('Rate App', Colors.red, Icons.favorite_border),
-                  _buildMore('Share Foot Ball Score App', Colors.cyan.shade700,
-                      Icons.screen_share_outlined),
-                  _buildMore('About App', Colors.blue, Icons.help_outline)
+                  Tooltip(
+                    key:_keyRate ,
+                    message: 'Soon!!',
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () async{
+
+                        final dynamic _toolTip = _keyRate.currentState;
+                        _toolTip.ensureTooltipVisible();
+                        Future.delayed(const Duration(seconds: 2)).whenComplete((){
+                          _toolTip!.deactivate();
+                        });
+                        
+                        
+                      },
+                      child: _buildMore('Rate App', Colors.red, Icons.favorite_border)),
+                  ),
+                  Tooltip(
+                    key: _keyShare,
+                    message: 'Soon!!',
+                    child: GestureDetector(
+                      onTap: (){
+                        
+                        final dynamic _toolTip = _keyShare.currentState;
+                        _toolTip.ensureTooltipVisible();
+                        Future.delayed(const Duration(seconds: 2)).whenComplete((){
+                          _toolTip!.deactivate();
+                        });
+                      },
+                      child: _buildMore('Share Foot Ball Score App', Colors.cyan.shade700,
+                          Icons.screen_share_outlined),
+                    ),
+                  ),
+                  GestureDetector(
+                      onTap: () {
+                        pushNewScreenWithRouteSettings(
+                          context,
+                          screen: const AboutApp(),
+                          settings: const RouteSettings(
+                            name: AboutApp.routeName,
+                            arguments: 2,
+                          ),
+                        );
+                      },
+                      child: _buildMore(
+                          'About App', Colors.blue, Icons.help_outline))
                 ],
               ),
             ),
-            Container(
-               margin: const EdgeInsets.only(top: 4.0),
-               child: Column(
-                 children: [
-                  _buildMoreEnd('Support Us', 'Remove ads for 1 year', Colors.yellow, Icons.star_border),
-                  _buildMoreEnd('Restore Previous Purchase', 'Restore missing subscription', Colors.green, Icons.star_border),
-                 ],
-               ),
-
-            )
           ],
         ),
       ),
@@ -54,7 +104,7 @@ class _MorePageState extends State<MorePage> {
 
   Container _buildMore(String name, Color color, IconData icon) {
     return Container(
-      color: kPrimaryColor2,
+      color: Theme.of(context).colorScheme.secondary,
       padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -77,66 +127,7 @@ class _MorePageState extends State<MorePage> {
               ),
               Text(
                 name,
-                style: const TextStyle(
-                    color: kWhiteColor,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.0),
-              )
-            ],
-          ),
-          const Icon(
-            Icons.navigate_next,
-            color: kgreyColor,
-            size: 35.0,
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMoreEnd(String title, String subTitle, Color color, IconData icon) {
-    return Container(
-      color: kPrimaryColor2,
-      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(3.0),
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle, color: color.withOpacity(0.2)),
-                child: Center(
-                  child: Icon(
-                    icon,
-                    color: color,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 20.0,
-              ),
-              
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                        color: kWhiteColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14.0),
-                  ),
-                  Text(
-                    subTitle,
-                    style: const TextStyle(
-                        color: kgreyColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12.0),
-                  ),
-                ],
+                style: Theme.of(context).textTheme.bodyText1,
               )
             ],
           ),

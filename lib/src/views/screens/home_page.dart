@@ -24,10 +24,7 @@ class _HomePageState extends State<HomePage> {
       MatchesPage(),
       LeaguesPage(),
       TeamsPage(),
-      MorePage()
-
-      
-   
+      MorePage()   
     ];
   }
 
@@ -68,7 +65,7 @@ class _HomePageState extends State<HomePage> {
       screens: _buildScreens(),
       itemCount: 4,
       confineInSafeArea: true,
-      backgroundColor: kPrimaryColor, // Default is Colors.white.
+      // backgroundColor: kPrimaryColor, // Default is Colors.white.
       handleAndroidBackButtonPress: true, // Default is true.
       customWidget: CustomBottomBarWidget(
         items: _bottomBarsItems(),
