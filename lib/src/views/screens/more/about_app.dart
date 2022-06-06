@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:footballscoreapp/src/constants/constants.dart';
+import 'package:footballscoreapp/src/views/screens/more/privacy_policy_page.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class AboutApp extends StatelessWidget {
   static const routeName = 'footballscoreapp/aboutapp';
@@ -104,14 +106,45 @@ class AboutApp extends StatelessWidget {
                   width: 20.0,
                 ),
                 Flexible(
-                    child: Text(
-                  featureDetail,
-                  style: Theme.of(context)
-                    .textTheme
-                    .bodyText1!
-                    .copyWith(fontWeight: FontWeight.w400),
-                ))
+                  child: Text(
+                    featureDetail,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1!
+                        .copyWith(fontWeight: FontWeight.w400),
+                  ),
+                ),
               ],
+            ),
+            GestureDetector(
+              onTap: () {
+                pushNewScreenWithRouteSettings(
+                  context,
+                  screen: const PrivacyPolicy(),
+                  settings: const RouteSettings(
+                    name: PrivacyPolicy.routeName,
+                    arguments: 2,
+                  ),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      'Privacy Policy',
+                      style: TextStyle(
+                          color: kBlueColor, fontWeight: FontWeight.w600),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: kBlueColor,
+                      size: 18.0,
+                    )
+                  ],
+                ),
+              ),
             )
           ],
         ),

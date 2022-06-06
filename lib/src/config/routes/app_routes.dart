@@ -6,6 +6,7 @@ import 'package:footballscoreapp/src/models/route_league_model.dart';
 import 'package:footballscoreapp/src/views/screens/leagues/components/search_leagues_page.dart';
 import 'package:footballscoreapp/src/views/screens/matches/components/search_matchs_page.dart';
 import 'package:footballscoreapp/src/views/screens/more/about_app.dart';
+import 'package:footballscoreapp/src/views/screens/more/privacy_policy_page.dart';
 import 'package:footballscoreapp/src/views/screens/more/theme_settings.dart';
 import 'package:footballscoreapp/src/views/screens/teams/components/search_teams.dart';
 import 'package:footballscoreapp/src/views/views.dart';
@@ -64,6 +65,8 @@ class AppRoute {
       )));
     }else if(settings.name == AboutApp.routeName){
       return MaterialPageRoute(builder: ((context) => const AboutApp()));
+    }else if(settings.name == PrivacyPolicy.routeName){
+      return MaterialPageRoute(builder: ((context) => const PrivacyPolicy()));
     }
     return MaterialPageRoute(builder: (context) => const HomePage());
   }

@@ -3,6 +3,9 @@ import 'package:footballscoreapp/src/constants/material_colors.dart';
 import 'package:footballscoreapp/src/views/screens/more/about_app.dart';
 import 'package:footballscoreapp/src/views/screens/more/theme_settings.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:rating_dialog/rating_dialog.dart';
+import 'package:share/share.dart';
+import 'package:store_redirect/store_redirect.dart';
 
 class MorePage extends StatefulWidget {
   static const routeName = 'footballscoreapp/morepage';
@@ -48,36 +51,27 @@ class _MorePageState extends State<MorePage> {
               child: Column(
                 children: [
                   Tooltip(
-                    key:_keyRate ,
+                    key: _keyRate,
                     message: 'Soon!!',
                     child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () async{
-
-                        final dynamic _toolTip = _keyRate.currentState;
-                        _toolTip.ensureTooltipVisible();
-                        Future.delayed(const Duration(seconds: 2)).whenComplete((){
-                          _toolTip!.deactivate();
-                        });
-                        
-                        
-                      },
-                      child: _buildMore('Rate App', Colors.red, Icons.favorite_border)),
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () async {
+                          showDialog(
+                              context: context,
+                              builder: (context) => _buildRatingDialog());
+                        },
+                        child: _buildMore(
+                            'Rate App', Colors.red, Icons.favorite_border)),
                   ),
                   Tooltip(
                     key: _keyShare,
                     message: 'Soon!!',
                     child: GestureDetector(
-                      onTap: (){
-                        
-                        final dynamic _toolTip = _keyShare.currentState;
-                        _toolTip.ensureTooltipVisible();
-                        Future.delayed(const Duration(seconds: 2)).whenComplete((){
-                          _toolTip!.deactivate();
-                        });
+                      onTap: () {
+                        _shareLink(context, 'https://play.google.com/store/apps/details?id=com.footballscore/');
                       },
-                      child: _buildMore('Share Foot Ball Score App', Colors.cyan.shade700,
-                          Icons.screen_share_outlined),
+                      child: _buildMore('Share Foot Ball Score App',
+                          Colors.cyan.shade700, Icons.screen_share_outlined),
                     ),
                   ),
                   GestureDetector(
@@ -102,7 +96,53 @@ class _MorePageState extends State<MorePage> {
     );
   }
 
-  Container _buildMore(String name, Color color, IconData icon) {
+  _shareLink(BuildContext context, String url) async {
+    final dynamic _renderBox = context.findRenderObject();
+
+    try {
+      await Share.share(url,
+          subject: 'Download Football Score app from here:',
+          sharePositionOrigin:
+              _renderBox.localToGlobal(Offset.zero) & _renderBox.size);
+    } catch (e) {}
+  }
+
+  RatingDialog _buildRatingDialog() {
+    return RatingDialog(
+      title: const Text('Rate Football Score app'),
+      message: const Text('Select Number of Stars 1 - 5 to Rate This App'),
+      image: Container(
+        width: 60.0,
+        height: 60.0,
+        decoration:  const BoxDecoration(
+          color: Colors.transparent,
+          image: DecorationImage(
+            
+            image: AssetImage('assets/images/FootballScoreIcon.png',
+            
+            ))
+        ),
+        
+      ),
+      submitButtonText: 'Submit',
+      starSize: 25.0,
+      onCancelled: () => print('cancelled'),
+      enableComment: false,
+
+      submitButtonTextStyle: const TextStyle(color: kBlueColor),
+      onSubmitted: (response) {
+        if (response.rating < 3.0) {
+         
+        } else {
+          StoreRedirect.redirect(
+              androidAppId: 'com.footballscore',
+              );
+        }
+      },
+    );
+  }
+
+  Widget _buildMore(String name, Color color, IconData icon) {
     return Container(
       color: Theme.of(context).colorScheme.secondary,
       padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),

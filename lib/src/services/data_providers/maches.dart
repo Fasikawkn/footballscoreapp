@@ -13,6 +13,7 @@ class MatchesDataProvider {
   // Get Game matches by Date
   Future<dynamic> getFixtureByDate(DateTime dateTime) async{
     String _date = getDate(dateTime);
+    print('THe selected date is ---------> $_date');
   late dynamic _apiResponse;
     try {
       final _queryParameter = {

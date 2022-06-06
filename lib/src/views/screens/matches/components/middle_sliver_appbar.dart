@@ -115,6 +115,7 @@ class _MiddleSliverAppBarState extends State<MiddleSliverAppBar> {
                               height: 20.0,
                             ),
                           TimeState(
+                            top: top,
                             fontSize: top /8,
                             match: widget.gameMatch,
                           ),

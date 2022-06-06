@@ -13,7 +13,6 @@ class SingleMatchWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('Match league status is +++++++++++++++++++++${ match.fixture!.status!.long}');
     return Container(
       decoration:  BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
@@ -170,10 +169,12 @@ class TimeState extends StatelessWidget {
     Key? key,
     required this.match,
     required this.fontSize,
+    required this.top,
   }) : super(key: key);
 
   final GameMatch match;
   final double fontSize;
+  final double top;
 
   @override
   Widget build(BuildContext context) {
@@ -187,14 +188,15 @@ class TimeState extends StatelessWidget {
                   fontSize: 14.0
                 ),
               ),
-        if (match.fixture!.status!.short == 'FT')
+        if (match.fixture!.status!.short == 'FT'||match.fixture!.status!.short == '2H' ||
+            match.fixture!.status!.short == '1H')
           Column(
             children: [
               Text(
                 '${match.goals!.home}-${match.goals!.away}',
                 style: Theme.of(context).textTheme.headline1,
               ),
-              Text(
+          if(top> 120)  if(match.fixture!.status!.short == 'FT')  Text(
                 'FULL TIME',
                 style: Theme.of(context).textTheme.bodyText1!.copyWith(
                   fontSize: 10.0
@@ -204,7 +206,7 @@ class TimeState extends StatelessWidget {
           ),
         if (match.fixture!.status!.short == '2H' ||
             match.fixture!.status!.short == '1H')
-          Column(
+        if(top > 120)  Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(

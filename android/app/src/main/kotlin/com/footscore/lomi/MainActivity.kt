@@ -1,4 +1,4 @@
-package com.example.footballscoreapp
+package com.footscore.lomi
 
 import io.flutter.embedding.android.FlutterActivity
 
